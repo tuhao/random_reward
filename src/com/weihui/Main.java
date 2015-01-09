@@ -5,9 +5,9 @@ public class Main {
 
 	public static void main(String[] args) {
 		Random instance = Random.getInstance(180);
-		for (int j = 0; j < 100; j++) {
+		for (int j = 0; j < 1000; j++) {
 			// first, convert the int from signed to "unsigned"
-			long l = (long) instance.getMersenneTwisterFast().nextInt(10);
+			long l = (long) instance.nextInt();
 			if (l < 0)
 				l += 4294967296L; // max int value
 			String s = String.valueOf(l);
