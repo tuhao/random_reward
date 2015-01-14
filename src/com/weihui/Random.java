@@ -11,17 +11,21 @@ public class Random {
 
 	private static Random instance = null;
 	private ArrayBlockingQueue<Integer> queue = null;
-	private int sum;
+	private int sum = 1;   //≥ı ºªØ
 	private Set<Integer> cache = new HashSet<Integer>();
 	
 	private Random(int sum){
-		this.sum = sum;
-		queue = new ArrayBlockingQueue<Integer>(sum);
+		if(sum > 0){
+			this.sum = sum;
+		}
+		queue = new ArrayBlockingQueue<Integer>(this.sum);
 		init(sum);
 	}
 	
 	private Random(int sum,int seed){
-		this.sum = sum;
+		if(sum > 0){
+			this.sum = sum;
+		}
 		queue = new ArrayBlockingQueue<Integer>(sum);
 		init(sum);
 	}
@@ -48,24 +52,6 @@ public class Random {
 		return instance;
 	}
 	
-	
-	
-	public static Random getInstance(int sum,long seed){
-		synchronized (mutex) {
-			if(instance == null){
-				instance = new Random(sum,seed);
-			}
-		}
-		return instance;
-	}
-	
-	private Random(int sum,long seed){
-		this.sum = sum;
-		mersenneTwisterFast = new MersenneTwisterFast(seed);
-		queue = new ArrayBlockingQueue<Integer>(sum);
-		init(sum);
-	}
-	
 	public int nextInt(){
 		Object obj = queue.poll();
 		if(obj == null){
@@ -76,9 +62,26 @@ public class Random {
 		}
 	}
 	
-	public MersenneTwisterFast getMersenneTwisterFast() {
-		return mersenneTwisterFast;
+	
+	//for speed test 
+	protected static Random getInstance(int sum,long seed){
+		synchronized (mutex) {
+			if(instance == null){
+				instance = new Random(sum,seed);
+			}
+		}
+		return instance;
 	}
+	
+	private Random(int sum,long seed){
+		if(sum > 0){
+			this.sum = sum;
+		}
+		mersenneTwisterFast = new MersenneTwisterFast(seed);
+		queue = new ArrayBlockingQueue<Integer>(this.sum);
+		init(sum);
+	}
+	
 	
 
 }
